@@ -17,7 +17,7 @@ export class Manager {
             return null;
         }
 
-        const checkResult = this.todoValidation(todo);
+        const checkResult = this.validateTodo(todo);
         if(!checkResult.isValid){
             console.warn(checkResult.errors);
             return null;
@@ -37,7 +37,7 @@ export class Manager {
             return null;
         }
         const updatedTodo = {...this.todos[todoIndex], ...changes }
-        const checkResult = this.todoValidation(updatedTodo);
+        const checkResult = this.validateTodo(updatedTodo);
         if (!checkResult.isValid) {
             console.warn(checkResult.errors);
             return null;
@@ -60,6 +60,11 @@ export class Manager {
         return todo;
    }
 
+   getTodosByProject(projectId){
+        const todos = this.todos.filter(todo => todo.projectId === projectId);
+        return todos;
+   }
+
    deleteTodoById(todoId){
         const todoIndex = this.todos.findIndex(todoEl => todoEl.id === todoId);
         if(todoIndex === -1){
@@ -72,11 +77,79 @@ export class Manager {
         return todoToDelete;
    }
 
+    createProject(project = {}) {
+        const projectExists = this.projects.find(projectEl => projectEl.id === project.id)
+        if (projectExists) {
+            console.warn("Project already exists");
+            return null;
+        }
+
+        const checkResult = this.validateProject(project);
+        if (!checkResult.isValid) {
+            console.warn(checkResult.errors);
+            return null;
+        }
+
+        const newProject = new Project(project);
+        this.projects.push(newProject);
+
+        this.storage.saveProjects(this.projects);
+        return newProject;
+    }
+
+    updateProject(changes = {}) {
+        const projectIndex = this.projects.findIndex(project => project.id === changes.id);
+        if (projectIndex === -1) {
+            console.warn("Specified project not found");
+            return null;
+        }
+        const updatedProject = { ...this.projects[projectIndex], ...changes }
+        const checkResult = this.validateProject(updatedProject);
+        if (!checkResult.isValid) {
+            console.warn(checkResult.errors);
+            return null;
+        }
+        this.projects[projectIndex] = new Project(updatedProject);
+        this.storage.saveProjects(this.projects);
+        return this.projects[projectIndex];
+    }
+
+    getAllProjects() {
+        return this.projects;
+    }
+
+    getProjectById(projectId) {
+        const project = this.projects.find(projectEl => projectEl.id === projectId);
+        if (!project) {
+            console.warn("Requested project not found");
+            return null;
+        }
+        return project;
+    }
+
+    deleteProjectById(projectId) {
+        const projectIndex = this.projects.findIndex(projectEl => projectEl.id === projectId);
+        if (projectIndex === -1) {
+            console.warn("Specified project not found");
+            return null;
+        }
+        const projectToDelete = this.projects[projectIndex];
+        this.todos.forEach((todo, index) => {
+            if(todo.projectId === projectToDelete.id){
+                this.todos[index] = new Todo({ ...todo, projectId: null });
+            }
+        })
+        this.storage.saveTodos(this.todos);
+        this.projects.splice(projectIndex, 1);
+        this.storage.saveProjects(this.projects);
+        return projectToDelete;
+    }
+
     isDateValid(dateStr){
         return !isNaN(new Date(dateStr).getTime());
    }
 
-    todoValidation(todo){
+    validateTodo(todo){
         const errors = [];
         if (todo.projectId) {
             const isPresent = this.projects.some(project => project.id === todo.projectId);
@@ -94,4 +167,16 @@ export class Manager {
         }
         return errors.length ? { isValid: false, errors } : { isValid: true };
    }
+
+    validateProject(project) {
+        const errors = [];
+        if (project.priority && (project.priority > 3 || project.priority < 1)) {
+            errors.push("Invalid priority value");
+        }
+
+        if (project.dueDate && !this.isDateValid(project.dueDate)) {
+            errors.push("Invalid date format");
+        }
+        return errors.length ? { isValid: false, errors } : { isValid: true };
+    }
 }
