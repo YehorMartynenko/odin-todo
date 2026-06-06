@@ -1,10 +1,19 @@
 export class Storage {
-    saveTodos(todosArr){
-        localStorage.setItem("todo", JSON.stringify(todosArr));
+    saveTodos(todos){
+        localStorage.setItem("todo", JSON.stringify(todos));
+    }
+
+    saveProjects(projects){
+        localStorage.setItem("project", JSON.stringify(projects));
     }
 
     getTodos(){
-        const todosArr = localStorage.getItem("todo");
-        return todosArr ? JSON.parse(todosArr) : [];
+        const todos = localStorage.getItem("todo");
+        return todos ? JSON.parse(todos) : [];
+    }
+
+    getProjects(){
+        const projects = localStorage.getItem("project");
+        return projects ? JSON.parse(projects) : [];
     }
 }
