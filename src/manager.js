@@ -1,5 +1,6 @@
 import { Todo } from "./todo.js";
 import { Project } from "./project.js";
+import { isPast, isValid, compareAsc } from "date-fns";
 
 export class Manager {
     constructor(storage){
@@ -47,8 +48,48 @@ export class Manager {
         return this.todos[todoIndex];
    }
 
+   toggleStatus(elementId){
+       const element = this.getTodoById(elementId) ? this.getTodoById(elementId) : this.getProjectById(elementId);
+    if(element.isComplete){
+        this.updateTodo({id: elementId, isComplete: false});
+    } else {
+        this.updateTodo({ id: elementId, isComplete: true });
+    }
+   }
+
    getAllTodos(){
         return this.todos;
+   }
+
+   getOverdueTodos(){
+    const overdueTodos = this.todos.filter(todo => isPast(todo.dueDate) && !todo.isComplete);
+       const sortedOverdueTodos = this.sortByDates(overdueTodos);
+    return sortedOverdueTodos;
+   }
+
+   getTodayTodos(){
+    const todayTodos = this.todos.filter(todo => {
+        const isSameDate = new Date(todo.dueDate).toDateString() === new Date().toDateString();
+        const isOverdue = isPast(todo.dueDate, Date.now());
+        if (todo.dueDate && isSameDate && !isOverdue && !todo.isComplete){
+            return true;
+        }
+    })
+       const sortedTodayTodos = this.sortByDates(todayTodos);
+    return sortedTodayTodos;
+   }
+
+   sortByDates(arr){
+    for (let i = 1; i<arr.length; i++){
+        let key = arr[i];
+        let j = i-1;
+        while (j >= 0 && (compareAsc(arr[j].dueDate, key.dueDate) > 0)) {
+            arr[j+1] = arr[j];
+            j--;
+        }
+        arr[j+1] = key;
+    }
+    return arr;
    }
 
    getTodoById(todoId){
@@ -145,10 +186,6 @@ export class Manager {
         return projectToDelete;
     }
 
-    isDateValid(dateStr){
-        return !isNaN(new Date(dateStr).getTime());
-   }
-
     validateTodo(todo){
         const errors = [];
         if (todo.projectId) {
@@ -162,9 +199,10 @@ export class Manager {
             errors.push("Invalid priority value");
         }
 
-        if (todo.dueDate && !this.isDateValid(todo.dueDate)) {
+        if (todo.dueDate && !isValid(new Date(todo.dueDate))) {
+            console.log(todo.dueDate);
             errors.push("Invalid date format");
-        }
+        } 
         return errors.length ? { isValid: false, errors } : { isValid: true };
    }
 
@@ -174,7 +212,7 @@ export class Manager {
             errors.push("Invalid priority value");
         }
 
-        if (project.dueDate && !this.isDateValid(project.dueDate)) {
+        if (project.dueDate && !isValid(project.dueDate)) {
             errors.push("Invalid date format");
         }
         return errors.length ? { isValid: false, errors } : { isValid: true };

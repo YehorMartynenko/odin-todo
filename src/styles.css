@@ -1,0 +1,163 @@
+:root {
+    --light-grey: #F3F5F4;
+    --purpule: #493841;
+    --yellowish: #CCBD91;
+    --white: #FFFFFF;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    letter-spacing: 1.2px;
+    line-height: 1.5;
+    font-family: "Roboto", sans-serif;
+    font-size: 1rem;
+}
+
+.content {
+    min-width: 100vw;
+    min-height: 100vh;
+    background-color: var(--light-grey);
+    margin: auto;
+    display: flex;  
+}
+
+#left-panel {
+    width: 280px;
+    background-color: var(--purpule);
+}
+
+
+.left-panel-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    color: var(--white);
+    margin: 2rem;
+}
+
+.left-panel-list li {
+    cursor: pointer;
+}
+.left-panel-list li:hover, .add-task-main-btn:hover {
+    color: var(--yellowish);
+}
+
+
+.add-task-main-btn {
+    position: relative;
+    padding: 2rem;
+    text-align: center;
+    color: var(--white);
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.add-task-main-btn::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translatex(-50%);
+
+    width: 80%;
+    border-bottom: 1px solid var(--white);
+}
+
+
+/* right-side content */
+
+#right-panel {
+    flex: 1;
+    padding-top: 3rem;
+    display: flex;
+    justify-content: center;
+}
+
+#right-panel-content {
+    background-color: var(--white);
+    width: 100%;
+    max-width: 600px;
+    height: max-content;
+    padding: 2rem;
+    box-sizing: box;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.section-task-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid #eee;
+    padding: 0.3rem 0;
+    align-items: start;
+}
+
+.task-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.overdue-deadline {
+    color: red;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+#right-panel h2 {
+    border-bottom: 1px solid lightgrey;
+}
+
+.task-checkbox {
+    appearance: none;
+
+    width: 20px;
+    height: 20px;
+    border: 2px solid #afafaf;
+    border-radius: 50%;
+    outline: none;
+    cursor: pointer;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.task-checkbox:hover {
+    background-color: rgba(36, 107, 253, 0.1);
+}
+
+.task-checkbox:checked {
+    background-color: var(--yellowish);
+}
+
+.add-task-second-btn {
+    border: none;
+    padding: 0.5rem 2rem;
+    margin-top: 1rem;
+    border-radius: 0.2rem;
+    max-width: fit-content;
+    cursor: pointer;
+    background-color: var(--purpule);
+    color: var(--white);
+}
+
+.add-task-second-btn:hover {
+    color: var(--yellowish);
+}
+
+.today {
+    font-size: 2rem;
+    position: relative;
+}
+
+.no-overdues-text {
+    margin: 1rem 0 3rem 0;
+    color: green;
+}
