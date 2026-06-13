@@ -1,6 +1,6 @@
 import { Todo } from "./todo.js";
 import { Project } from "./project.js";
-import { isPast, isValid, compareAsc } from "date-fns";
+import { isPast, isValid, compareAsc, isDate } from "date-fns";
 
 export class Manager {
     constructor(storage){
@@ -23,13 +23,28 @@ export class Manager {
             console.warn(checkResult.errors);
             return null;
         }
-
+        
+        todo.dueDate = this.normalizeDueDate(todo.dueDate);
         const newTodo = new Todo(todo);
         this.todos.push(newTodo);
 
         this.storage.saveTodos(this.todos);
         return newTodo;
    }
+
+    isDateOnly(value) {
+        return /^\d{4}-\d{2}-\d{2}$/.test(value);
+    }
+
+    normalizeDueDate(value) {
+        if (this.isDateOnly(value)) {
+            const [year, month, day] = value.split("-").map(Number);
+            return new Date(year, month - 1, day, 23, 59, 59, 999).getTime();
+        }
+
+        return new Date(value).getTime();
+    }   
+
 
     updateTodo(changes = {}) {
         const todoIndex = this.todos.findIndex(todo => todo.id === changes.id);

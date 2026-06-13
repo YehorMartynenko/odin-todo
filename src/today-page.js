@@ -20,18 +20,43 @@ export function TodayPageController(manager) {
     const todayTaskListSection = createTodaySection(manager);
     rootDiv.appendChild(todayTaskListSection);
 
-    const myForm = createAddTaskForm(manager);
-    rootDiv.appendChild(myForm);
-
     rootDiv.addEventListener("click", (event) => {
         const checkbox = event.target.closest(".task-checkbox");
         const addTask = event.target.closest(".add-task-second-btn");
+        const cancelBtn = event.target.closest(".cancel-btn");
 
         if (checkbox) {
             const affectedTask = manager.getTodoById(checkbox.dataset.id);
             manager.toggleStatus(affectedTask.id);
             TodayPageController(manager);
         }
+
+        if(addTask) {
+            const myForm = createAddTaskForm(manager);
+            const addTaskBtn = document.querySelector(".add-task-second-btn");
+            todayTaskListSection.removeChild(addTaskBtn);
+            todayTaskListSection.appendChild(myForm);
+        }
+
+        if(cancelBtn) {
+            const myBtn = createAddTaskBtn();
+            const myForm = document.querySelector(".add-task-form")
+            todayTaskListSection.removeChild(myForm);
+            todayTaskListSection.appendChild(myBtn);
+        }
+    });
+
+    rootDiv.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const form = event.target;
+        manager.createTodo({
+            title: form.elements.task_title.value,
+            notes: form.elements.task_desc.value,
+            dueDate: form.elements.task_date.value,
+            priority: form.elements.task_priority.value,
+            projectId: form.elements.task_project.value,
+        });
+        TodayPageController(manager);
     })
 
     contentDiv.appendChild(rootDiv);
@@ -99,13 +124,19 @@ function createTodaySection(manager) {
         todayTaskListSection.appendChild(todayTaskItemDiv);
     });
 
-    const addTaskBtn = document.createElement("button");
-    addTaskBtn.textContent = "Add Task";
-    addTaskBtn.setAttribute("class", "today-task-item add-task-second-btn");
+    const addTaskBtn = createAddTaskBtn();
 
     todayTaskListSection.appendChild(addTaskBtn);
 
     return todayTaskListSection;
+}
+
+function createAddTaskBtn() {
+    const addTaskBtn = document.createElement("button");
+    addTaskBtn.textContent = "Add Task";
+    addTaskBtn.setAttribute("class", "today-task-item add-task-second-btn");
+
+    return addTaskBtn;
 }
 
 function createCheckbox(todoEl){
@@ -131,39 +162,70 @@ function createAddTaskForm(manager){
     taskTitleInput.setAttribute("id", "task-title");
     taskTitleInput.setAttribute("name", "task_title");
     taskTitleInput.setAttribute("type", "text");
+    taskTitleInput.required = true;
     taskTitleInput.setAttribute("placeholder", "Enter your task title here...");
 
-    const taskDescInput = document.createElement("input");
+    const taskDescInput = document.createElement("textarea");
     taskDescInput.setAttribute("id", "task-desc");
-    taskTitleInput.setAttribute("name", "task_desc");
-    taskDescInput.setAttribute("type", "textarea");
+    taskDescInput.setAttribute("name", "task_desc");
     taskDescInput.setAttribute("placeholder", "Description");
 
     const taskDateInput = document.createElement("input");
     taskDateInput.setAttribute("id", "task-date");
-    taskTitleInput.setAttribute("name", "task_date");
-    taskDateInput.setAttribute("type", "date");
+    taskDateInput.setAttribute("name", "task_date");
+    taskDateInput.setAttribute("type", "datetime-local");
+
 
     const taskPrioritySelect = document.createElement("select");
     taskPrioritySelect.setAttribute("id", "task-priority-select");
-    const taskPriorityOptionOne = document.createElement("option");
-    taskPriorityOptionOne.setAttribute("value", "1");
-    taskPriorityOptionOne.textContent = "Priority 1";
-    const taskPriorityOptionTwo = document.createElement("option");
-    taskPriorityOptionTwo.setAttribute("value", "2");
-    taskPriorityOptionTwo.textContent = "Priority 2"
-    const taskPriorityOptionThree = document.createElement("option");
-    taskPriorityOptionThree.setAttribute("value", "3");
-    taskPriorityOptionThree.textContent = "Priority 3"
+    taskPrioritySelect.setAttribute("name", "task_priority");
+    const priorities = 
+    [{
+        title: "highest priority",
+        value: 1
+    },
+    {   title: "medium priority",
+        value: 2
+    },
+    {    title: "lowest prioroty",
+        value: 3
+    }];
 
-    taskPrioritySelect.appendChild(taskPriorityOptionOne);
-    taskPrioritySelect.appendChild(taskPriorityOptionTwo);
-    taskPrioritySelect.appendChild(taskPriorityOptionThree);
+    priorities.forEach(priority => {
+        const taskPriorityOption = document.createElement("option");
+        taskPriorityOption.setAttribute("value", priority.value);
+        taskPriorityOption.textContent = `${priority.title}`;
+        taskPrioritySelect.appendChild(taskPriorityOption)
+    });
+    const projectSelect = document.createElement("select");
+    projectSelect.setAttribute("id", "project-select");
+    projectSelect.setAttribute("name", "task_project");
+
+    const projects = manager.getAllProjects();
+    projects.forEach(project => {
+        const projectSelectOption = document.createElement("option");
+        projectSelectOption.setAttribute("value", project.id);
+        projectSelectOption.textContent = project.title;
+        projectSelect.appendChild(projectSelectOption);
+    });
+
+    const cancelBtn = document.createElement("button");
+    cancelBtn.setAttribute("class", "cancel-btn");
+    cancelBtn.setAttribute("type", "button");
+    cancelBtn.textContent = "Cancel";
+
+    const submitBtn = document.createElement("button");
+    submitBtn.setAttribute("type", "submit");
+    submitBtn.setAttribute("class", "submit-btn");
+    submitBtn.textContent = "Submit";
 
     myForm.appendChild(taskTitleInput);
     myForm.appendChild(taskDescInput);
     myForm.appendChild(taskDateInput);
     myForm.appendChild(taskPrioritySelect);
+    myForm.appendChild(projectSelect);
+    myForm.appendChild(cancelBtn);
+    myForm.appendChild(submitBtn);
 
     return myForm;
 }

@@ -12,7 +12,7 @@ export class Todo {
         this.title = title;
         this.notes = notes;
         this.dueDate = dueDate;
-        this.priority = priority;
+        this.priority = Number(priority);
         this.projectId = projectId;
         this.isComplete = isComplete;
     }
