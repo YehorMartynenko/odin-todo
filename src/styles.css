@@ -1,5 +1,6 @@
 :root {
     --light-grey: #F3F5F4;
+    --dark-grey: #444;
     --purpule: #493841;
     --yellowish: #CCBD91;
     --white: #FFFFFF;
@@ -164,4 +165,88 @@
 
 .overdue {
     margin-bottom: 2rem;
+}
+
+.add-task-form {
+    border: 1px solid var(--light-grey);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.add-task-form:focus {
+    border: 1px solid grey;
+}
+
+#task-title{
+    border: none;
+    padding: 0.5rem;
+    font-weight: bold;
+}
+
+#task-title:focus{
+    outline: none;
+}
+
+#task-desc {
+    border: none;
+    padding: 0.5rem;
+    resize: none;
+}
+
+#task-desc:focus {
+    outline: none;
+}
+
+.add-task-form .wrapper {
+    display: flex;
+    justify-content: start;
+    border-bottom: 1px solid var(--light-grey);
+}
+
+#task-date, #task-priority-select, #project-select {
+    background-color: white;
+    padding: 0.5rem;
+    font-size: 14px;
+    border: none;
+}
+
+#task-date:focus,
+#task-priority-select:focus,
+#project-select:focus {
+    outline: none;
+}
+
+.btn-wrapper {
+    display: flex;
+    justify-content: end;
+    margin: 0.5rem;
+    gap: 0.5rem;
+}
+
+.btn-wrapper button {
+    border: none;
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-wrapper .submit-btn {
+    background-color: lightcoral;
+    color: white;
+}
+
+.btn-wrapper .submit-btn:hover {
+    background-color: red;
+    color: white;
+}
+
+.btn-wrapper .cancel-btn {
+    background-color: var(--light-grey);
+    color: var(--dark-grey);
+}
+
+.btn-wrapper .cancel-btn:hover {
+    background-color: #e5e7e667;
+    color: black;
 }

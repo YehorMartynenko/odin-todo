@@ -170,10 +170,20 @@ function createAddTaskForm(manager){
     taskDescInput.setAttribute("name", "task_desc");
     taskDescInput.setAttribute("placeholder", "Description");
 
+    const wrapper = document.createElement("div");
+    wrapper.setAttribute("class", "wrapper");
+
     const taskDateInput = document.createElement("input");
     taskDateInput.setAttribute("id", "task-date");
     taskDateInput.setAttribute("name", "task_date");
     taskDateInput.setAttribute("type", "datetime-local");
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+
+    taskDateInput.value = `${year}-${month}-${day}T23:59`;
 
 
     const taskPrioritySelect = document.createElement("select");
@@ -200,6 +210,11 @@ function createAddTaskForm(manager){
     const projectSelect = document.createElement("select");
     projectSelect.setAttribute("id", "project-select");
     projectSelect.setAttribute("name", "task_project");
+    const defaultOption = document.createElement("option");
+    defaultOption.setAttribute("value", "");
+    defaultOption.textContent = "Select project";
+    defaultOption.selected = true;
+    projectSelect.appendChild(defaultOption);
 
     const projects = manager.getAllProjects();
     projects.forEach(project => {
@@ -208,6 +223,13 @@ function createAddTaskForm(manager){
         projectSelectOption.textContent = project.title;
         projectSelect.appendChild(projectSelectOption);
     });
+
+    wrapper.appendChild(taskDateInput);
+    wrapper.appendChild(taskPrioritySelect);
+    wrapper.appendChild(projectSelect);
+
+    const btnWrapper = document.createElement("div");
+    btnWrapper.setAttribute("class", "btn-wrapper");
 
     const cancelBtn = document.createElement("button");
     cancelBtn.setAttribute("class", "cancel-btn");
@@ -219,13 +241,13 @@ function createAddTaskForm(manager){
     submitBtn.setAttribute("class", "submit-btn");
     submitBtn.textContent = "Submit";
 
+    btnWrapper.appendChild(cancelBtn);
+    btnWrapper.appendChild(submitBtn);
+
     myForm.appendChild(taskTitleInput);
     myForm.appendChild(taskDescInput);
-    myForm.appendChild(taskDateInput);
-    myForm.appendChild(taskPrioritySelect);
-    myForm.appendChild(projectSelect);
-    myForm.appendChild(cancelBtn);
-    myForm.appendChild(submitBtn);
+    myForm.appendChild(wrapper);
+    myForm.appendChild(btnWrapper);
 
     return myForm;
 }
