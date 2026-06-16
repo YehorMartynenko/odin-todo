@@ -179,23 +179,23 @@
     border: 1px solid grey;
 }
 
-#task-title{
+#task-title, #edit-task-title{
     border: none;
     padding: 0.5rem;
     font-weight: bold;
 }
 
-#task-title:focus{
+#task-title:focus, #edit-task-title:focus{
     outline: none;
 }
 
-#task-desc {
+#task-desc, #edit-task-desc {
     border: none;
     padding: 0.5rem;
     resize: none;
 }
 
-#task-desc:focus {
+#task-desc:focus, #edit-task-desc:focus {
     outline: none;
 }
 
@@ -205,7 +205,8 @@
     border-bottom: 1px solid var(--light-grey);
 }
 
-#task-date, #task-priority-select, #project-select {
+#task-date, #task-priority-select, #project-select,
+#edit-task-project, #edit-task-date, #edit-task-priority{
     background-color: white;
     padding: 0.5rem;
     font-size: 14px;
@@ -214,41 +215,44 @@
 
 #task-date:focus,
 #task-priority-select:focus,
-#project-select:focus {
+#project-select:focus,
+#edit-task-priority:focus,
+#edit-task-date:focus,
+#edit-task-project:focus {
     outline: none;
 }
 
-.btn-wrapper {
+.btn-wrapper, .form-buttons-wrapper {
     display: flex;
     justify-content: end;
     margin: 0.5rem;
     gap: 0.5rem;
 }
 
-.btn-wrapper button {
+.btn-wrapper button, .form-buttons-wrapper button {
     border: none;
     padding: 0.2rem 0.5rem;
     border-radius: 5px;
     cursor: pointer;
 }
 
-.btn-wrapper .submit-btn {
+.submit-btn{
     background-color: lightcoral;
     color: white;
 }
 
-.btn-wrapper .submit-btn:hover {
+.submit-btn:hover {
     background-color: red;
     color: white;
 }
 
-.btn-wrapper .cancel-btn {
+.cancel-btn {
     background-color: var(--light-grey);
     color: var(--dark-grey);
 }
 
-.btn-wrapper .cancel-btn:hover {
-    background-color: #23b13667;
+.cancel-btn:hover {
+    background-color: #52887a67;
     color: black;
 }
 
@@ -269,4 +273,47 @@
     background-color: inherit;
     border: none;
     color: inherit;
+}
+
+#edit-task-dialog {
+    margin: auto;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+#edit-task-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(2px);
+}
+
+#edit-task-form {
+    display: flex;
+    gap: 2rem;
+}
+
+.form-task-desc-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+}
+
+.form-metadata-wrapper .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+}
+
+.form-metadata-wrapper {
+    border-left: 1px solid grey;
+    padding: 2rem;
+    background-color: var(--light-grey);
+}
+
+#edit-task-form>.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-buttons-wrapper {
+    margin: auto 0.5rem 2rem 0.5rem;
 }

@@ -13,7 +13,7 @@ export function TodayPageController(manager) {
     rootDiv.appendChild(myHeader1);
 
     // Build Overdue section
-    const overdueSection = createOvedueSection(manager);
+    const overdueSection = createOverdueSection(manager);
     rootDiv.appendChild(overdueSection);
 
     // Build Today section
@@ -23,19 +23,21 @@ export function TodayPageController(manager) {
     rootDiv.addEventListener("click", (event) => {
         const checkbox = event.target.closest(".task-checkbox");
         const addTask = event.target.closest(".add-task-second-btn");
-        const cancelBtn = event.target.closest(".cancel-btn");
+        const cancelBtn = event.target.closest(".add-task-form .cancel-btn");
+        const cancelDialogBtn = event.target.closest("#edit-task-dialog .cancel-btn");
         const cancelTodayBtn = event.target.closest(".cancel-today-btn");
+        const selectedTask = event.target.closest(".task-text");
 
         if (checkbox) {
-            const affectedTask = manager.getTodoById(checkbox.dataset.id);
+            const taskId = event.target.closest("[data-id]");
+            const affectedTask = manager.getTodoById(taskId.dataset.id);
             manager.toggleStatus(affectedTask.id);
             TodayPageController(manager);
         }
 
         if(addTask) {
             const myForm = createAddTaskForm(manager);
-            const addTaskBtn = document.querySelector(".add-task-second-btn");
-            todayTaskListSection.removeChild(addTaskBtn);
+            todayTaskListSection.removeChild(addTask);
             todayTaskListSection.appendChild(myForm);
         }
 
@@ -47,32 +49,60 @@ export function TodayPageController(manager) {
         }
         
         if(cancelTodayBtn) {
-            console.log("123123");
             const todayDateTimeDiv = document.querySelector(".today-div");
             todayDateTimeDiv.style.display = "none";
             const taskDateInput = document.getElementById("task-date");
             taskDateInput.style.display = "block";
+        }
+
+        if (selectedTask){
+            const taskId = event.target.closest("[data-id]");
+            const task = manager.getTodoById(taskId.dataset.id);
+            const projects = manager.getAllProjects()
+            const editTaskDialog = createEditTaskDialog(task, projects);
+
+            editTaskDialog.addEventListener("close", () => {
+                editTaskDialog.remove();
+            }, { once: true });
+
+            rootDiv.appendChild(editTaskDialog);
+            editTaskDialog.showModal();
+        }
+
+        if (cancelDialogBtn){
+            const dialog = document.getElementById("edit-task-dialog");
+            dialog.close();
         }
     });
 
     rootDiv.addEventListener("submit", (event) => {
         event.preventDefault();
         const form = event.target;
-        manager.createTodo({
-            title: form.elements.task_title.value,
-            notes: form.elements.task_desc.value,
-            dueDate: form.elements.task_date.value,
-            priority: form.elements.task_priority.value,
-            projectId: form.elements.task_project.value,
-        });
+        if (form.getAttribute("id") === "edit-task-form"){
+            manager.updateTodo({
+                id: form.dataset.task_id,
+                title: form.elements.edit_task_title.value,
+                notes: form.elements.edit_task_desc.value,
+                dueDate: form.elements.edit_task_date.value,
+                priority: form.elements.edit_task_priority.value,
+                projectId: form.elements.edit_task_project.value,
+            });
+        } else {
+            manager.createTodo({
+                title: form.elements.task_title.value,
+                notes: form.elements.task_desc.value,
+                dueDate: form.elements.task_date.value,
+                priority: form.elements.task_priority.value,
+                projectId: form.elements.task_project.value,
+            });
+        }
         TodayPageController(manager);
     })
 
     contentDiv.appendChild(rootDiv);
-    
 }
 
-function createOvedueSection(manager){
+function createOverdueSection(manager){
     const overdueSection = document.createElement("section");
     overdueSection.setAttribute("class", "overdue");
     const overdueHeader = document.createElement("h2");
@@ -91,8 +121,9 @@ function createOvedueSection(manager){
     overdueTodos.forEach(todoEl => {
         const overdueTaskDiv = document.createElement("div");
         overdueTaskDiv.setAttribute("class", "section-task-item");
+        overdueTaskDiv.dataset.id = todoEl.id;
 
-        const myCheckBox = createCheckbox(todoEl);
+        const myCheckBox = createCheckbox();
         const taskTextSpan = createTaskTitle(todoEl);
 
         const taskWrapperDiv = document.createElement("div");
@@ -124,8 +155,9 @@ function createTodaySection(manager) {
     todayTodos.forEach(todoEl => {
         const todayTaskItemDiv = document.createElement("div");
         todayTaskItemDiv.setAttribute("class", "section-task-item");
+        todayTaskItemDiv.dataset.id = todoEl.id;
 
-        const myCheckBox = createCheckbox(todoEl);
+        const myCheckBox = createCheckbox();
         const taskTextSpan = createTaskTitle(todoEl);
 
         todayTaskItemDiv.appendChild(myCheckBox);
@@ -148,11 +180,10 @@ function createAddTaskBtn() {
     return addTaskBtn;
 }
 
-function createCheckbox(todoEl){
+function createCheckbox(){
     const myCheckBox = document.createElement("input");
     myCheckBox.setAttribute("type", "checkbox");
     myCheckBox.setAttribute("class", "task-checkbox");
-    myCheckBox.dataset.id = todoEl.id;
     return myCheckBox;
 }
 
@@ -221,7 +252,7 @@ function createAddTaskForm(manager){
     {   title: "medium priority",
         value: 2
     },
-    {    title: "lowest prioroty",
+    {   title: "lowest priority",
         value: 3
     }];
 
@@ -275,4 +306,170 @@ function createAddTaskForm(manager){
     myForm.appendChild(btnWrapper);
 
     return myForm;
+}
+
+function createEditTaskDialog(task, projects = []) {
+    const dialog = document.createElement("dialog");
+    dialog.id = "edit-task-dialog";
+
+    const dialogContent = document.createElement("div");
+    dialogContent.className = "dialog-content";
+
+    const form = document.createElement("form");
+    form.id = "edit-task-form";
+    form.dataset.task_id = task.id;
+
+    const mainFormGroup = document.createElement("div");
+    mainFormGroup.className = "form-group";
+
+    const taskDescWrapper = document.createElement("div");
+    taskDescWrapper.className = "form-task-desc-wrapper";
+
+    const titleInput = document.createElement("input");
+    titleInput.id = "edit-task-title";
+    titleInput.name = "edit_task_title";
+    titleInput.type = "text";
+    titleInput.value = task.title;
+
+    const descTextarea = document.createElement("textarea");
+    descTextarea.id = "edit-task-desc";
+    descTextarea.name = "edit_task_desc";
+    descTextarea.placeholder = "Add description";
+    descTextarea.value = task.notes;
+
+    taskDescWrapper.appendChild(titleInput);
+    taskDescWrapper.appendChild(descTextarea);
+
+    const buttonsWrapper = document.createElement("div");
+    buttonsWrapper.className = "form-buttons-wrapper";
+
+    const cancelButton = document.createElement("button");
+    cancelButton.className = "cancel-btn";
+    cancelButton.type = "button";
+    cancelButton.textContent = "Cancel";
+
+    const submitButton = document.createElement("button");
+    submitButton.className = "submit-btn";
+    submitButton.type = "submit";
+    submitButton.textContent = "Submit";
+
+    buttonsWrapper.appendChild(cancelButton);
+    buttonsWrapper.appendChild(submitButton);
+
+    mainFormGroup.appendChild(taskDescWrapper);
+    mainFormGroup.appendChild(buttonsWrapper);
+
+    const metadataWrapper = document.createElement("div");
+    metadataWrapper.className = "form-metadata-wrapper";
+
+    const projectGroup = document.createElement("div");
+    projectGroup.className = "form-group";
+
+    const projectLabel = document.createElement("label");
+    projectLabel.htmlFor = "edit-task-project";
+    projectLabel.textContent = "Project";
+
+    const projectSelect = document.createElement("select");
+    projectSelect.name = "edit_task_project";
+    projectSelect.id = "edit-task-project";
+
+    const defaultOption = document.createElement("option");
+    defaultOption.setAttribute("value", "");
+    defaultOption.textContent = "No project";
+    if (!task.projectId){
+        defaultOption.selected = true;
+    }
+    projectSelect.appendChild(defaultOption);
+    projects.forEach(project => {
+        const projectSelectOption = document.createElement("option");
+        projectSelectOption.setAttribute("value", project.id);
+        projectSelectOption.textContent = project.title;
+        if (projectSelectOption.value === task.projectId) {
+            projectSelectOption.selected = true;
+        }
+        projectSelect.appendChild(projectSelectOption);
+    });
+
+
+    projectGroup.appendChild(projectLabel);
+    projectGroup.appendChild(projectSelect);
+
+    const dateGroup = document.createElement("div");
+    dateGroup.className = "form-group";
+
+    const dateLabel = document.createElement("label");
+    dateLabel.htmlFor = "edit-task-date";
+    dateLabel.textContent = "Date";
+
+    const dateInput = document.createElement("input");
+    dateInput.name = "edit_task_date";
+    dateInput.id = "edit-task-date";
+    dateInput.type = "datetime-local";
+
+    const timestamp = task.dueDate;
+
+    const date = new Date(timestamp);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+
+    const formatted = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+    dateInput.value = formatted;
+
+    dateGroup.appendChild(dateLabel);
+    dateGroup.appendChild(dateInput);
+
+    const priorityGroup = document.createElement("div");
+    priorityGroup.className = "form-group";
+
+    const priorityLabel = document.createElement("label");
+    priorityLabel.htmlFor = "edit-task-priority";
+    priorityLabel.textContent = "Priority";
+
+    const prioritySelect = document.createElement("select");
+    prioritySelect.name = "edit_task_priority";
+    prioritySelect.id = "edit-task-priority";
+
+    const priorities =
+        [{
+            title: "highest priority",
+            value: 1
+        },
+        {
+            title: "medium priority",
+            value: 2
+        },
+        {
+            title: "lowest priority",
+            value: 3
+        }];
+
+    priorities.forEach(priority => {
+        const taskPriorityOption = document.createElement("option");
+        taskPriorityOption.setAttribute("value", priority.value);
+        if (Number(taskPriorityOption.value) === Number(task.priority)){
+            taskPriorityOption.selected = true;
+        }
+        taskPriorityOption.textContent = `${priority.title}`;
+        prioritySelect.appendChild(taskPriorityOption)
+    });
+
+    priorityGroup.appendChild(priorityLabel);
+    priorityGroup.appendChild(prioritySelect);
+
+    metadataWrapper.appendChild(projectGroup);
+    metadataWrapper.appendChild(dateGroup);
+    metadataWrapper.appendChild(priorityGroup);
+
+    form.appendChild(mainFormGroup);
+    form.appendChild(metadataWrapper);
+
+    dialogContent.appendChild(form);
+    dialog.appendChild(dialogContent);
+
+    return dialog;
 }
