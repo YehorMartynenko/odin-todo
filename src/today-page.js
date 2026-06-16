@@ -1,4 +1,19 @@
 import { formatDate } from "./utils.js"
+import * as domHelper from "./dom-helpers.js";
+
+const priorities =
+    [{
+        title: "highest priority",
+        id: 1
+    },
+    {
+        title: "medium priority",
+        id: 2
+    },
+    {
+        title: "lowest priority",
+        id: 3
+    }];
 
 export function TodayPageController(manager) {
     const contentDiv = document.getElementById("right-panel-content");
@@ -173,17 +188,15 @@ function createTodaySection(manager) {
 }
 
 function createAddTaskBtn() {
-    const addTaskBtn = document.createElement("button");
-    addTaskBtn.textContent = "Add Task";
-    addTaskBtn.setAttribute("class", "today-task-item add-task-second-btn");
-
+    const addTaskBtn = domHelper.createButton({
+        text: "Add Task",
+        className: ["today-task-item", "add-task-second-btn"]
+    });
     return addTaskBtn;
 }
 
 function createCheckbox(){
-    const myCheckBox = document.createElement("input");
-    myCheckBox.setAttribute("type", "checkbox");
-    myCheckBox.setAttribute("class", "task-checkbox");
+    const myCheckBox = domHelper.createInput({type: "checkbox", className: ["task-checkbox"]});
     return myCheckBox;
 }
 
@@ -198,25 +211,20 @@ function createAddTaskForm(manager){
     const myForm = document.createElement("form");
     myForm.setAttribute("class", "add-task-form");
 
-    const taskTitleInput = document.createElement("input");
-    taskTitleInput.setAttribute("id", "task-title");
-    taskTitleInput.setAttribute("name", "task_title");
-    taskTitleInput.setAttribute("type", "text");
+    const taskTitleInput = domHelper.createInput({
+         id: "task-title",
+        type: "text",
+        name: "task_title", 
+        placeholder: "Enter your task title here..."
+    });
     taskTitleInput.required = true;
-    taskTitleInput.setAttribute("placeholder", "Enter your task title here...");
 
-    const taskDescInput = document.createElement("textarea");
-    taskDescInput.setAttribute("id", "task-desc");
-    taskDescInput.setAttribute("name", "task_desc");
-    taskDescInput.setAttribute("placeholder", "Description");
+    const taskDescInput = domHelper.createTextarea({ id: "task-desc", name: "task_desc", placeholder: "Description"});
 
     const wrapper = document.createElement("div");
     wrapper.setAttribute("class", "wrapper");
 
-    const taskDateInput = document.createElement("input");
-    taskDateInput.setAttribute("id", "task-date");
-    taskDateInput.setAttribute("name", "task_date");
-    taskDateInput.setAttribute("type", "datetime-local");
+    const taskDateInput = domHelper.createInput({ id: "task-date", name: "task_date", type: "datetime-local" });
     taskDateInput.style.display = "none";
 
     const todayDiv = document.createElement("div");
@@ -225,10 +233,10 @@ function createAddTaskForm(manager){
     const todayP = document.createElement("p");
     todayP.textContent = "Today";
 
-    const cancelTodayBtn = document.createElement("button");
-    cancelTodayBtn.setAttribute("class", "cancel-today-btn");
-    cancelTodayBtn.textContent = "x";
-    cancelTodayBtn.setAttribute("type", "button");
+    const cancelTodayBtn = domHelper.createButton({
+        text: "x",
+        className: ["cancel-today-btn"]
+    });
 
     todayDiv.appendChild(todayP);
     todayDiv.appendChild(cancelTodayBtn);
@@ -240,44 +248,11 @@ function createAddTaskForm(manager){
 
     taskDateInput.value = `${year}-${month}-${day}T23:59`;
 
-
-    const taskPrioritySelect = document.createElement("select");
-    taskPrioritySelect.setAttribute("id", "task-priority-select");
-    taskPrioritySelect.setAttribute("name", "task_priority");
-    const priorities = 
-    [{
-        title: "highest priority",
-        value: 1
-    },
-    {   title: "medium priority",
-        value: 2
-    },
-    {   title: "lowest priority",
-        value: 3
-    }];
-
-    priorities.forEach(priority => {
-        const taskPriorityOption = document.createElement("option");
-        taskPriorityOption.setAttribute("value", priority.value);
-        taskPriorityOption.textContent = `${priority.title}`;
-        taskPrioritySelect.appendChild(taskPriorityOption)
-    });
-    const projectSelect = document.createElement("select");
-    projectSelect.setAttribute("id", "project-select");
-    projectSelect.setAttribute("name", "task_project");
-    const defaultOption = document.createElement("option");
-    defaultOption.setAttribute("value", "");
-    defaultOption.textContent = "Select project";
-    defaultOption.selected = true;
-    projectSelect.appendChild(defaultOption);
+    const taskPrioritySelect = domHelper.createSelect({id: "task-priority-select", name: "task_priority", options: priorities});
 
     const projects = manager.getAllProjects();
-    projects.forEach(project => {
-        const projectSelectOption = document.createElement("option");
-        projectSelectOption.setAttribute("value", project.id);
-        projectSelectOption.textContent = project.title;
-        projectSelect.appendChild(projectSelectOption);
-    });
+    const projectSelect = domHelper.createSelect({ id: "project-select", name: "task_project", options: projects, 
+        defaultOption: { value: "", title: "Select project" }});
 
     wrapper.appendChild(taskDateInput);
     wrapper.appendChild(todayDiv);
@@ -287,15 +262,16 @@ function createAddTaskForm(manager){
     const btnWrapper = document.createElement("div");
     btnWrapper.setAttribute("class", "btn-wrapper");
 
-    const cancelBtn = document.createElement("button");
-    cancelBtn.setAttribute("class", "cancel-btn");
-    cancelBtn.setAttribute("type", "button");
-    cancelBtn.textContent = "Cancel";
+    const cancelBtn = domHelper.createButton({
+        text: "Cancel",
+        className: ["cancel-btn"]
+    });
 
-    const submitBtn = document.createElement("button");
-    submitBtn.setAttribute("type", "submit");
-    submitBtn.setAttribute("class", "submit-btn");
-    submitBtn.textContent = "Submit";
+    const submitBtn = domHelper.createButton({
+        text: "Submit",
+        className: ["submit-btn"],
+        type: "submit"
+    });
 
     btnWrapper.appendChild(cancelBtn);
     btnWrapper.appendChild(submitBtn);
@@ -325,16 +301,10 @@ function createEditTaskDialog(task, projects = []) {
     const taskDescWrapper = document.createElement("div");
     taskDescWrapper.className = "form-task-desc-wrapper";
 
-    const titleInput = document.createElement("input");
-    titleInput.id = "edit-task-title";
-    titleInput.name = "edit_task_title";
-    titleInput.type = "text";
+    const titleInput = domHelper.createInput({ id: "edit-task-title", name: "edit_task_title", type: "text" });
     titleInput.value = task.title;
 
-    const descTextarea = document.createElement("textarea");
-    descTextarea.id = "edit-task-desc";
-    descTextarea.name = "edit_task_desc";
-    descTextarea.placeholder = "Add description";
+    const descTextarea = domHelper.createTextarea({ id: "edit-task-desc", name: "edit_task_desc", placeholder: "Add description" });
     descTextarea.value = task.notes;
 
     taskDescWrapper.appendChild(titleInput);
@@ -343,15 +313,16 @@ function createEditTaskDialog(task, projects = []) {
     const buttonsWrapper = document.createElement("div");
     buttonsWrapper.className = "form-buttons-wrapper";
 
-    const cancelButton = document.createElement("button");
-    cancelButton.className = "cancel-btn";
-    cancelButton.type = "button";
-    cancelButton.textContent = "Cancel";
+    const cancelButton = domHelper.createButton({
+        text: "Cancel",
+        className: ["cancel-btn"],
+    });
 
-    const submitButton = document.createElement("button");
-    submitButton.className = "submit-btn";
-    submitButton.type = "submit";
-    submitButton.textContent = "Submit";
+    const submitButton = domHelper.createButton({
+        text: "Submit",
+        className: ["submit-btn"],
+        type: "submit"
+    });
 
     buttonsWrapper.appendChild(cancelButton);
     buttonsWrapper.appendChild(submitButton);
@@ -369,27 +340,18 @@ function createEditTaskDialog(task, projects = []) {
     projectLabel.htmlFor = "edit-task-project";
     projectLabel.textContent = "Project";
 
-    const projectSelect = document.createElement("select");
-    projectSelect.name = "edit_task_project";
-    projectSelect.id = "edit-task-project";
+    const selectObj = {
+        id: "edit-task-project", 
+        name: "edit_task_project", 
+        options: projects,
+        defaultOption: { value: "", title: "No Project" }
+    };
 
-    const defaultOption = document.createElement("option");
-    defaultOption.setAttribute("value", "");
-    defaultOption.textContent = "No project";
-    if (!task.projectId){
-        defaultOption.selected = true;
-    }
-    projectSelect.appendChild(defaultOption);
-    projects.forEach(project => {
-        const projectSelectOption = document.createElement("option");
-        projectSelectOption.setAttribute("value", project.id);
-        projectSelectOption.textContent = project.title;
-        if (projectSelectOption.value === task.projectId) {
-            projectSelectOption.selected = true;
-        }
-        projectSelect.appendChild(projectSelectOption);
-    });
+    if(task.projectId){
+        selectObj.selectedOption = task.projectId;
+    };
 
+    const projectSelect = domHelper.createSelect(selectObj);
 
     projectGroup.appendChild(projectLabel);
     projectGroup.appendChild(projectSelect);
@@ -401,23 +363,15 @@ function createEditTaskDialog(task, projects = []) {
     dateLabel.htmlFor = "edit-task-date";
     dateLabel.textContent = "Date";
 
-    const dateInput = document.createElement("input");
-    dateInput.name = "edit_task_date";
-    dateInput.id = "edit-task-date";
-    dateInput.type = "datetime-local";
-
+    const dateInput = domHelper.createInput({ id: "edit-task-date", name: "edit_task_date", type: "datetime-local" });
     const timestamp = task.dueDate;
-
     const date = new Date(timestamp);
-
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const hours = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
-
     const formatted = `${year}-${month}-${day}T${hours}:${minutes}`;
-
     dateInput.value = formatted;
 
     dateGroup.appendChild(dateLabel);
@@ -430,33 +384,16 @@ function createEditTaskDialog(task, projects = []) {
     priorityLabel.htmlFor = "edit-task-priority";
     priorityLabel.textContent = "Priority";
 
-    const prioritySelect = document.createElement("select");
-    prioritySelect.name = "edit_task_priority";
-    prioritySelect.id = "edit-task-priority";
+    const prioritySelectObj = {
+        id: "edit-task-priority",
+        name: "edit_task_priority",
+        options: priorities,
+    }
 
-    const priorities =
-        [{
-            title: "highest priority",
-            value: 1
-        },
-        {
-            title: "medium priority",
-            value: 2
-        },
-        {
-            title: "lowest priority",
-            value: 3
-        }];
-
-    priorities.forEach(priority => {
-        const taskPriorityOption = document.createElement("option");
-        taskPriorityOption.setAttribute("value", priority.value);
-        if (Number(taskPriorityOption.value) === Number(task.priority)){
-            taskPriorityOption.selected = true;
-        }
-        taskPriorityOption.textContent = `${priority.title}`;
-        prioritySelect.appendChild(taskPriorityOption)
-    });
+    if(task.priority){
+        prioritySelectObj.selectedOption = Number(task.priority);
+    }
+    const prioritySelect = domHelper.createSelect(prioritySelectObj);
 
     priorityGroup.appendChild(priorityLabel);
     priorityGroup.appendChild(prioritySelect);
