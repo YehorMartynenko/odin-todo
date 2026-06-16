@@ -27,11 +27,9 @@ export function TodayPageController(manager) {
     myHeader1.setAttribute("class", "today");
     rootDiv.appendChild(myHeader1);
 
-    // Build Overdue section
     const overdueSection = createOverdueSection(manager);
     rootDiv.appendChild(overdueSection);
 
-    // Build Today section
     const todayTaskListSection = createTodaySection(manager);
     rootDiv.appendChild(todayTaskListSection);
 
