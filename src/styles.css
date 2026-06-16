@@ -4,6 +4,7 @@
     --purpule: #493841;
     --yellowish: #CCBD91;
     --white: #FFFFFF;
+    --green: #058527;
 }
 
 * {
@@ -247,6 +248,25 @@
 }
 
 .btn-wrapper .cancel-btn:hover {
-    background-color: #e5e7e667;
+    background-color: #23b13667;
     color: black;
+}
+
+.today-div {
+    margin: 0.5rem;
+    padding: 0.3rem;
+    border: 1px solid var(--green);
+    background-color: var(--white);
+    border-radius: 5px;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    color: var(--green);
+}
+
+.today-div button {
+    cursor: pointer;
+    background-color: inherit;
+    border: none;
+    color: inherit;
 }

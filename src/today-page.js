@@ -24,6 +24,7 @@ export function TodayPageController(manager) {
         const checkbox = event.target.closest(".task-checkbox");
         const addTask = event.target.closest(".add-task-second-btn");
         const cancelBtn = event.target.closest(".cancel-btn");
+        const cancelTodayBtn = event.target.closest(".cancel-today-btn");
 
         if (checkbox) {
             const affectedTask = manager.getTodoById(checkbox.dataset.id);
@@ -43,6 +44,14 @@ export function TodayPageController(manager) {
             const myForm = document.querySelector(".add-task-form")
             todayTaskListSection.removeChild(myForm);
             todayTaskListSection.appendChild(myBtn);
+        }
+        
+        if(cancelTodayBtn) {
+            console.log("123123");
+            const todayDateTimeDiv = document.querySelector(".today-div");
+            todayDateTimeDiv.style.display = "none";
+            const taskDateInput = document.getElementById("task-date");
+            taskDateInput.style.display = "block";
         }
     });
 
@@ -177,8 +186,23 @@ function createAddTaskForm(manager){
     taskDateInput.setAttribute("id", "task-date");
     taskDateInput.setAttribute("name", "task_date");
     taskDateInput.setAttribute("type", "datetime-local");
-    const now = new Date();
+    taskDateInput.style.display = "none";
 
+    const todayDiv = document.createElement("div");
+    todayDiv.setAttribute("class", "today-div");
+
+    const todayP = document.createElement("p");
+    todayP.textContent = "Today";
+
+    const cancelTodayBtn = document.createElement("button");
+    cancelTodayBtn.setAttribute("class", "cancel-today-btn");
+    cancelTodayBtn.textContent = "x";
+    cancelTodayBtn.setAttribute("type", "button");
+
+    todayDiv.appendChild(todayP);
+    todayDiv.appendChild(cancelTodayBtn);
+
+    const now = new Date();
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, "0");
     const day = String(now.getDate()).padStart(2, "0");
@@ -225,6 +249,7 @@ function createAddTaskForm(manager){
     });
 
     wrapper.appendChild(taskDateInput);
+    wrapper.appendChild(todayDiv);
     wrapper.appendChild(taskPrioritySelect);
     wrapper.appendChild(projectSelect);
 
