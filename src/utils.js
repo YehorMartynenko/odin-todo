@@ -1,4 +1,7 @@
+import { da } from "date-fns/locale";
+
 export function formatDate(dateStr){
+    if(!dateStr) return;
     const formatter = new Intl.DateTimeFormat("en-US", {
         day: "numeric",
         month: "short",
