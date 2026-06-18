@@ -127,6 +127,11 @@ export class Manager {
         return todos;
    }
 
+   getInboxTodos(){
+    const todos = this.todos.filter(todo => !todo.projectId && !todo.isComplete);
+    return todos;
+   }
+
    deleteTodoById(todoId){
         const todoIndex = this.todos.findIndex(todoEl => todoEl.id === todoId);
         if(todoIndex === -1){
