@@ -78,9 +78,15 @@ export class Manager {
 
    getOverdueTodos(){
     const overdueTodos = this.todos.filter(todo => isPast(todo.dueDate) && !todo.isComplete);
-       const sortedOverdueTodos = this.sortByDates(overdueTodos);
+    const sortedOverdueTodos = this.sortByDates(overdueTodos);
     return sortedOverdueTodos;
    }
+
+    getCurrentTodos(){
+        const notOverdueTodos = this.todos.filter(todo => !isPast(todo.dueDate) && !todo.isComplete);
+        const sorted = this.sortByDates(notOverdueTodos);
+        return sorted;
+    }
 
    getTodayTodos(){
     const todayTodos = this.todos.filter(todo => {

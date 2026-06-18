@@ -104,7 +104,7 @@
     gap: 0.2rem;
 }
 
-.overdue-deadline {
+.deadline-info {
     color: red;
     font-size: 0.8rem;
     letter-spacing: 1px;
@@ -154,17 +154,16 @@
     color: var(--yellowish);
 }
 
-.today {
+.page-header {
     font-size: 2rem;
-    position: relative;
 }
 
-.no-overdues-text {
+.default-section-text {
     margin: 1rem 0 1rem 0;
     color: green;
 }
 
-.overdue {
+.page-section {
     margin-bottom: 2rem;
 }
 
@@ -179,46 +178,47 @@
     border: 1px solid grey;
 }
 
-#task-title, #edit-task-title{
+#task-title, #task-dialog-title{
     border: none;
     padding: 0.5rem;
     font-weight: bold;
 }
 
-#task-title:focus, #edit-task-title:focus{
+#task-title:focus, #task-dialog-title:focus{
     outline: none;
 }
 
-#task-desc, #edit-task-desc {
+#task-desc, #task-dialog-desc {
     border: none;
     padding: 0.5rem;
     resize: none;
 }
 
-#task-desc:focus, #edit-task-desc:focus {
+#task-desc:focus, #task-dialog-desc:focus {
     outline: none;
 }
 
-.add-task-form .wrapper {
+.add-task-form .selection-wrapper {
     display: flex;
     justify-content: start;
     border-bottom: 1px solid var(--light-grey);
 }
 
-#task-date, #task-priority-select, #project-select,
-#edit-task-project, #edit-task-date, #edit-task-priority{
+#task-date,
+#task-priority-select,
+#project-select,
+#task-dialog-date,
+#task-dialog-priority,
+#task-dialog-project {
     background-color: white;
     padding: 0.5rem;
     font-size: 14px;
     border: none;
 }
 
-#task-date:focus,
-#task-priority-select:focus,
-#project-select:focus,
-#edit-task-priority:focus,
-#edit-task-date:focus,
-#edit-task-project:focus {
+#task-dialog-date:focus,
+#task-dialog-priority:focus,
+#task-dialog-project:focus {
     outline: none;
 }
 
@@ -275,18 +275,18 @@
     color: inherit;
 }
 
-#edit-task-dialog {
+#task-dialog {
     margin: auto;
     border-radius: 10px;
     border: 1px solid black;
 }
 
-#edit-task-dialog::backdrop {
+#task-dialog::backdrop {
     background-color: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(2px);
 }
 
-#edit-task-form {
+#task-dialog-form {
     display: flex;
     gap: 2rem;
 }
@@ -309,11 +309,19 @@
     background-color: var(--light-grey);
 }
 
-#edit-task-form>.form-group {
+#task-dialog-form>.form-group {
     display: flex;
     flex-direction: column;
 }
 
 .form-buttons-wrapper {
     margin: auto 0.5rem 2rem 0.5rem;
+}
+
+.section-task-item {
+    cursor: pointer;
+}
+
+.section-task-item:hover {
+    background-color: var(--light-grey);
 }
