@@ -151,12 +151,6 @@ export class Manager {
             return null;
         }
 
-        const checkResult = this.validateProject(project);
-        if (!checkResult.isValid) {
-            console.warn(checkResult.errors);
-            return null;
-        }
-
         const newProject = new Project(project);
         this.projects.push(newProject);
 
@@ -171,11 +165,6 @@ export class Manager {
             return null;
         }
         const updatedProject = { ...this.projects[projectIndex], ...changes }
-        const checkResult = this.validateProject(updatedProject);
-        if (!checkResult.isValid) {
-            console.warn(checkResult.errors);
-            return null;
-        }
         this.projects[projectIndex] = new Project(updatedProject);
         this.storage.saveProjects(this.projects);
         return this.projects[projectIndex];
@@ -232,15 +221,4 @@ export class Manager {
         return errors.length ? { isValid: false, errors } : { isValid: true };
    }
 
-    validateProject(project) {
-        const errors = [];
-        if (project.priority && (project.priority > 3 || project.priority < 1)) {
-            errors.push("Invalid priority value");
-        }
-
-        if (project.dueDate && !isValid(project.dueDate)) {
-            errors.push("Invalid date format");
-        }
-        return errors.length ? { isValid: false, errors } : { isValid: true };
-    }
 }

@@ -1,5 +1,6 @@
 import { TodayPageController } from "./today-page.js";
 import { InboxPageController } from "./inbox-page.js";
+import { ProjectsPageController } from "./projects-page.js";
 import { openTaskDialog } from "./task-dialog.js";
 
 export class ScreenController {
@@ -36,6 +37,11 @@ export class ScreenController {
                 this.loadInboxPage();
                 return;
             }
+
+            if (navButton.dataset.btn === "my-projects-btn") {
+                this.loadProjectsPage();
+                return;
+            }
         });
     }
 
@@ -59,6 +65,11 @@ export class ScreenController {
         InboxPageController(this.manager);
     }
 
+    loadProjectsPage() {
+        this.currentPage = "projects";
+        ProjectsPageController(this.manager);
+    }
+
     renderCurrentPage() {
         if (this.currentPage === "today") {
             TodayPageController(this.manager);
@@ -67,6 +78,11 @@ export class ScreenController {
 
         if (this.currentPage === "inbox") {
             InboxPageController(this.manager);
+            return;
+        }
+
+        if (this.currentPage === "projects") {
+            ProjectsPageController(this.manager);
             return;
         }
     }
