@@ -1,49 +1,49 @@
-import { formatDate } from "./utils.js"
-import * as domHelper from "./dom-helpers.js";
-import { openTaskDialog } from "./task-dialog.js";
 import { createSection, createAddTaskBtn } from "./task-section.js";
-import { taskListEventsInit, inlineFormEventsInit, submitEventsInit } from "./section-events.js";
-
+import {
+  taskListEventsInit,
+  inlineFormEventsInit,
+  submitEventsInit,
+} from "./section-events.js";
 
 const DEFAULT_INBOX_MESSAGE = "Capture now, organize later";
 export function InboxPageController(manager) {
-    const contentDiv = document.getElementById("right-panel-content");
-    contentDiv.innerHTML = "";
-    
-    const rootDiv = document.createElement("div");
-    rootDiv.id = "today-page-root";
-    
-    const pageHeader = document.createElement("h1");
-    pageHeader.textContent = "Inbox";
-    pageHeader.className = "page-header";
-    
-    const inboxSection = createSection({
-        todos: manager.getInboxTodos(),
-        defaultMessage: DEFAULT_INBOX_MESSAGE,
-    });
+  const contentDiv = document.getElementById("right-panel-content");
+  contentDiv.innerHTML = "";
 
-    const addTaskBtn = createAddTaskBtn();
+  const rootDiv = document.createElement("div");
+  rootDiv.id = "today-page-root";
 
-    inboxSection.appendChild(addTaskBtn);
+  const pageHeader = document.createElement("h1");
+  pageHeader.textContent = "Inbox";
+  pageHeader.className = "page-header";
 
-    rootDiv.append(pageHeader, inboxSection);
+  const inboxSection = createSection({
+    todos: manager.getInboxTodos(),
+    defaultMessage: DEFAULT_INBOX_MESSAGE,
+  });
 
-    taskListEventsInit({
-        rootEl: rootDiv,
-        manager: manager,
-        rerender: () => InboxPageController(manager),
-    });
+  const addTaskBtn = createAddTaskBtn();
 
-    inlineFormEventsInit({
-        rootEl: rootDiv,
-        manager: manager,
-    });
-    
-    submitEventsInit({
-        rootEl: rootDiv,
-        manager: manager,
-        rerender: () => InboxPageController(manager),
-    });
+  inboxSection.appendChild(addTaskBtn);
 
-    contentDiv.appendChild(rootDiv);
+  rootDiv.append(pageHeader, inboxSection);
+
+  taskListEventsInit({
+    rootEl: rootDiv,
+    manager: manager,
+    rerender: () => InboxPageController(manager),
+  });
+
+  inlineFormEventsInit({
+    rootEl: rootDiv,
+    manager: manager,
+  });
+
+  submitEventsInit({
+    rootEl: rootDiv,
+    manager: manager,
+    rerender: () => InboxPageController(manager),
+  });
+
+  contentDiv.appendChild(rootDiv);
 }

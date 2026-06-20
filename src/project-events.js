@@ -1,51 +1,54 @@
-import { createAddProjectForm, createAddProjectBtn } from "./my-projects-section.js"
+import {
+  createAddProjectForm,
+  createAddProjectBtn,
+} from "./my-projects-section.js";
 import { ProjectPageController } from "./project-page.js";
 
 export function projectListEvents({ rootEl, manager }) {
-    rootEl.addEventListener("click", (event) => {
-        const selectedProject = event.target.closest(".section-task-item");
+  rootEl.addEventListener("click", (event) => {
+    const selectedProject = event.target.closest(".section-task-item");
 
-        if (selectedProject) {
-            const project = manager.getProjectById(selectedProject.dataset.id);
+    if (selectedProject) {
+      const project = manager.getProjectById(selectedProject.dataset.id);
 
-            ProjectPageController(project, manager);
+      ProjectPageController(project, manager);
 
-            return;
-        }
-    });
+      return;
+    }
+  });
 }
 
 export function inlineFormEventsInit({ rootEl, manager }) {
-    rootEl.addEventListener("click", (event) => {
-        const addProject = event.target.closest(".add-task-second-btn");
-        const cancelInlineForm = event.target.closest(".add-task-form .cancel-btn");
+  rootEl.addEventListener("click", (event) => {
+    const addProject = event.target.closest(".add-task-second-btn");
+    const cancelInlineForm = event.target.closest(".add-task-form .cancel-btn");
 
-        if (addProject) {
-            const myForm = createAddProjectForm(manager);
-            addProject.replaceWith(myForm);
-            return;
-        }
+    if (addProject) {
+      const myForm = createAddProjectForm(manager);
+      addProject.replaceWith(myForm);
+      return;
+    }
 
-        if (cancelInlineForm) {
-            const myBtn = createAddProjectBtn();
-            const myForm = document.querySelector(".add-task-form")
-            myForm.replaceWith(myBtn);
-            return;
-        }
-    });
+    if (cancelInlineForm) {
+      const myBtn = createAddProjectBtn();
+      const myForm = document.querySelector(".add-task-form");
+      myForm.replaceWith(myBtn);
+      return;
+    }
+  });
 }
 
 export function submitEventsInit({ rootEl, manager, rerender }) {
-    rootEl.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const form = event.target;
+  rootEl.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const form = event.target;
 
-        if (!form.classList.contains("add-task-form")) return;
+    if (!form.classList.contains("add-task-form")) return;
 
-        manager.createProject({
-            title: form.elements.project_title.value.trim(),
-        });
-
-        rerender();
+    manager.createProject({
+      title: form.elements.project_title.value.trim(),
     });
+
+    rerender();
+  });
 }

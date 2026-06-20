@@ -1,55 +1,57 @@
-import { openTaskDialog } from "./task-dialog.js";
-import { createSection, createAddTaskForm, createAddTaskBtn } from "./task-section.js";
-import { taskListEventsInit, inlineFormEventsInit, submitEventsInit } from "./section-events.js";
+import { createSection, createAddTaskBtn } from "./task-section.js";
+import {
+  taskListEventsInit,
+  inlineFormEventsInit,
+  submitEventsInit,
+} from "./section-events.js";
 
 const DEFAULT_OVERDUE_MESSAGE = "Wow! You don't have any overdues so far!";
 const DEFAULT_TODAY_MESSAGE = "You don't have any task for today!";
 
 export function TodayPageController(manager) {
-    const contentDiv = document.getElementById("right-panel-content");
-    contentDiv.innerHTML = "";
+  const contentDiv = document.getElementById("right-panel-content");
+  contentDiv.innerHTML = "";
 
-    const rootDiv = document.createElement("div");
-    rootDiv.id = "today-page-root";
+  const rootDiv = document.createElement("div");
+  rootDiv.id = "today-page-root";
 
-    const pageHeader = document.createElement("h1");
-    pageHeader.textContent = "Today";
-    pageHeader.className = "page-header";
+  const pageHeader = document.createElement("h1");
+  pageHeader.textContent = "Today";
+  pageHeader.className = "page-header";
 
-    const overdueSection = createSection({
-        todos: manager.getOverdueTodos(),
-        sectionName: "Overdue",
-        defaultMessage: DEFAULT_OVERDUE_MESSAGE,
-    });
+  const overdueSection = createSection({
+    todos: manager.getOverdueTodos(),
+    sectionName: "Overdue",
+    defaultMessage: DEFAULT_OVERDUE_MESSAGE,
+  });
 
-    const todaySection = createSection({
-        todos: manager.getTodayTodos(),
-        sectionName: "Today",
-        defaultMessage: DEFAULT_TODAY_MESSAGE,
-    });
+  const todaySection = createSection({
+    todos: manager.getTodayTodos(),
+    sectionName: "Today",
+    defaultMessage: DEFAULT_TODAY_MESSAGE,
+  });
 
-    const addTaskBtn = createAddTaskBtn();
+  const addTaskBtn = createAddTaskBtn();
 
-    todaySection.appendChild(addTaskBtn);
-    rootDiv.append(pageHeader, overdueSection, todaySection);
+  todaySection.appendChild(addTaskBtn);
+  rootDiv.append(pageHeader, overdueSection, todaySection);
 
-    taskListEventsInit({
-        rootEl: rootDiv,
-        manager: manager,
-        rerender: () => TodayPageController(manager),
-    });
+  taskListEventsInit({
+    rootEl: rootDiv,
+    manager: manager,
+    rerender: () => TodayPageController(manager),
+  });
 
-    inlineFormEventsInit({
-        rootEl: rootDiv,
-        manager: manager,
-    })
+  inlineFormEventsInit({
+    rootEl: rootDiv,
+    manager: manager,
+  });
 
-    submitEventsInit({
-        rootEl: rootDiv,
-        manager: manager,
-        rerender: () => TodayPageController(manager),
-    })
+  submitEventsInit({
+    rootEl: rootDiv,
+    manager: manager,
+    rerender: () => TodayPageController(manager),
+  });
 
-    contentDiv.appendChild(rootDiv);
+  contentDiv.appendChild(rootDiv);
 }
-

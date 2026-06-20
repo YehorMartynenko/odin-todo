@@ -1,5 +1,5 @@
 import { App } from "./app.js";
-import './styles.css';
+import "./styles.css";
 
 const myApp = new App();
 //myApp.manager.createProject({title: "NewProject"});
