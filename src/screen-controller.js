@@ -1,6 +1,6 @@
 import { TodayPageController } from "./today-page.js";
 import { InboxPageController } from "./inbox-page.js";
-import { ProjectsPageController } from "./projects-page.js";
+import { ProjectsPageController } from "./my-projects-page.js";
 import { openTaskDialog } from "./task-dialog.js";
 
 export class ScreenController {

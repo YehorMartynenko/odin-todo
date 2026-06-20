@@ -1,4 +1,19 @@
-import { createAddProjectForm, createAddProjectBtn } from "./project-section.js"
+import { createAddProjectForm, createAddProjectBtn } from "./my-projects-section.js"
+import { ProjectPageController } from "./project-page.js";
+
+export function projectListEvents({ rootEl, manager }) {
+    rootEl.addEventListener("click", (event) => {
+        const selectedProject = event.target.closest(".section-task-item");
+
+        if (selectedProject) {
+            const project = manager.getProjectById(selectedProject.dataset.id);
+
+            ProjectPageController(project, manager);
+
+            return;
+        }
+    });
+}
 
 export function inlineFormEventsInit({ rootEl, manager }) {
     rootEl.addEventListener("click", (event) => {

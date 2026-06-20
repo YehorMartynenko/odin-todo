@@ -1,7 +1,7 @@
 import { formatDate } from "./utils.js"
 import * as domHelper from "./dom-helpers.js";
-import { createSection, createAddProjectBtn } from "./project-section.js";
-import { inlineFormEventsInit, submitEventsInit } from "./project-events.js";
+import { createSection, createAddProjectBtn } from "./my-projects-section.js";
+import { inlineFormEventsInit, submitEventsInit, projectListEvents } from "./project-events.js";
 
 const DEFAULT_PROJECT_MESSAGE = "You have no projects yet. Click the button below to create one.";
 export function ProjectsPageController(manager) {
@@ -36,6 +36,11 @@ export function ProjectsPageController(manager) {
         manager: manager,
         rerender: () => ProjectsPageController(manager),
     });
+
+    projectListEvents({
+        rootEl: rootDiv,
+        manager: manager,
+    })
 
     contentDiv.appendChild(rootDiv);
 }

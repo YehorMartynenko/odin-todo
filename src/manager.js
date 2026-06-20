@@ -123,7 +123,7 @@ export class Manager {
    }
 
    getTodosByProject(projectId){
-        const todos = this.todos.filter(todo => todo.projectId === projectId);
+        const todos = this.todos.filter(todo => todo.projectId === projectId && !todo.isComplete);
         return todos;
    }
 
