@@ -1,9 +1,9 @@
-import { createSection, createAddTaskBtn } from "./task-section.js";
+import { createSection, createAddTaskBtn } from "../task-section.js";
 import {
   taskListEventsInit,
   inlineFormEventsInit,
   submitEventsInit,
-} from "./section-events.js";
+} from "../section-events.js";
 
 const DEFAULT_INBOX_MESSAGE = "Capture now, organize later";
 export function InboxPageController(manager) {

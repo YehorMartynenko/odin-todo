@@ -1,5 +1,5 @@
-import { Todo } from "./todo.js";
-import { Project } from "./project.js";
+import { Todo } from "./entities/todo.js";
+import { Project } from "./entities/project.js";
 import { isPast, isValid, compareAsc } from "date-fns";
 
 export class Manager {

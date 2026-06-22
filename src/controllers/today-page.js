@@ -3,7 +3,7 @@ import {
   taskListEventsInit,
   inlineFormEventsInit,
   submitEventsInit,
-} from "./section-events.js";
+} from "../section-events.js";
 
 const DEFAULT_OVERDUE_MESSAGE = "Wow! You don't have any overdues so far!";
 const DEFAULT_TODAY_MESSAGE = "You don't have any task for today!";

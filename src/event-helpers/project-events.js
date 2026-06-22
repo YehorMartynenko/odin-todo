@@ -1,8 +1,8 @@
 import {
   createAddProjectForm,
   createAddProjectBtn,
-} from "./my-projects-section.js";
-import { ProjectPageController } from "./project-page.js";
+} from "./helpers/my-projects-section.js";
+import { ProjectPageController } from "./controllers/project-page.js";
 
 export function projectListEvents({ rootEl, manager }) {
   rootEl.addEventListener("click", (event) => {

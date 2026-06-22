@@ -1,5 +1,5 @@
-import { createSection } from "./task-section.js";
-import { taskListEventsInit } from "./section-events.js";
+import { createSection } from "../task-section.js";
+import { taskListEventsInit } from "../section-events.js";
 
 const DEFAULT_PROJECT_TODOS_MESSAGE = "This project have no tasks yet.";
 export function ProjectPageController(project, manager) {

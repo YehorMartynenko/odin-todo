@@ -1,6 +1,6 @@
 import { Manager } from "./manager.js";
 import { Storage } from "./storage.js";
-import { ScreenController } from "./screen-controller.js";
+import { ScreenController } from "./controllers/screen-controller.js";
 
 export class App {
   constructor() {

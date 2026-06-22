@@ -1,6 +1,6 @@
 import { formatDate, getTodayEndDateTimeLocalValue } from "./utils.js";
-import { PRIORITIES } from "./constants.js";
-import * as domHelper from "./dom-helpers.js";
+import { PRIORITIES } from "./helpers/constants.js";
+import * as domHelper from "./helpers/dom-helpers.js";
 
 export function createSection({ todos, sectionName, defaultMessage }) {
   const section = document.createElement("section");

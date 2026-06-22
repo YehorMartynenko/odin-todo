@@ -1,4 +1,4 @@
-import { openTaskDialog } from "./task-dialog.js";
+import { openTaskDialog } from "./helpers/task-dialog.js";
 import { createAddTaskForm, createAddTaskBtn } from "./task-section.js";
 
 export function taskListEventsInit({ rootEl, manager, rerender }) {

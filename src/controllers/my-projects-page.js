@@ -1,9 +1,12 @@
-import { createSection, createAddProjectBtn } from "./my-projects-section.js";
+import {
+  createSection,
+  createAddProjectBtn,
+} from "../helpers/my-projects-section.js";
 import {
   inlineFormEventsInit,
   submitEventsInit,
   projectListEvents,
-} from "./project-events.js";
+} from "../project-events.js";
 
 const DEFAULT_PROJECT_MESSAGE =
   "You have no projects yet. Click the button below to create one.";
